@@ -747,6 +747,9 @@
     <Reference Include="PsdPlugin">
       <HintPath>/home/neto/Documents/project/gameMultiplayer/Library/ScriptAssemblies/PsdPlugin.dll</HintPath>
     </Reference>
+    <Reference Include="com.unity.cinemachine.editor">
+      <HintPath>/home/neto/Documents/project/gameMultiplayer/Library/ScriptAssemblies/com.unity.cinemachine.editor.dll</HintPath>
+    </Reference>
     <Reference Include="Unity.Burst.Editor">
       <HintPath>/home/neto/Documents/project/gameMultiplayer/Library/ScriptAssemblies/Unity.Burst.Editor.dll</HintPath>
     </Reference>
@@ -798,9 +801,6 @@
     <Reference Include="Unity.VisualScripting.Flow">
       <HintPath>/home/neto/Documents/project/gameMultiplayer/Library/ScriptAssemblies/Unity.VisualScripting.Flow.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.VisualScripting.Flow.Editor">
-      <HintPath>/home/neto/Documents/project/gameMultiplayer/Library/ScriptAssemblies/Unity.VisualScripting.Flow.Editor.dll</HintPath>
-    </Reference>
     <Reference Include="Unity.InternalAPIEngineBridge.001">
       <HintPath>/home/neto/Documents/project/gameMultiplayer/Library/ScriptAssemblies/Unity.InternalAPIEngineBridge.001.dll</HintPath>
     </Reference>
@@ -813,14 +813,17 @@
     <Reference Include="Unity.Mathematics.Editor">
       <HintPath>/home/neto/Documents/project/gameMultiplayer/Library/ScriptAssemblies/Unity.Mathematics.Editor.dll</HintPath>
     </Reference>
-    <Reference Include="Unity.2D.Tilemap.Extras.Editor">
-      <HintPath>/home/neto/Documents/project/gameMultiplayer/Library/ScriptAssemblies/Unity.2D.Tilemap.Extras.Editor.dll</HintPath>
+    <Reference Include="Unity.VisualScripting.Flow.Editor">
+      <HintPath>/home/neto/Documents/project/gameMultiplayer/Library/ScriptAssemblies/Unity.VisualScripting.Flow.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.Timeline">
       <HintPath>/home/neto/Documents/project/gameMultiplayer/Library/ScriptAssemblies/Unity.Timeline.dll</HintPath>
     </Reference>
     <Reference Include="ParrelSync">
       <HintPath>/home/neto/Documents/project/gameMultiplayer/Library/ScriptAssemblies/ParrelSync.dll</HintPath>
+    </Reference>
+    <Reference Include="Unity.2D.Tilemap.Extras.Editor">
+      <HintPath>/home/neto/Documents/project/gameMultiplayer/Library/ScriptAssemblies/Unity.2D.Tilemap.Extras.Editor.dll</HintPath>
     </Reference>
     <Reference Include="Unity.VisualScripting.SettingsProvider.Editor">
       <HintPath>/home/neto/Documents/project/gameMultiplayer/Library/ScriptAssemblies/Unity.VisualScripting.SettingsProvider.Editor.dll</HintPath>
@@ -860,6 +863,9 @@
     </Reference>
     <Reference Include="Unity.VisualScripting.State">
       <HintPath>/home/neto/Documents/project/gameMultiplayer/Library/ScriptAssemblies/Unity.VisualScripting.State.dll</HintPath>
+    </Reference>
+    <Reference Include="Cinemachine">
+      <HintPath>/home/neto/Documents/project/gameMultiplayer/Library/ScriptAssemblies/Cinemachine.dll</HintPath>
     </Reference>
     <Reference Include="Unity.2D.SpriteShape.Editor">
       <HintPath>/home/neto/Documents/project/gameMultiplayer/Library/ScriptAssemblies/Unity.2D.SpriteShape.Editor.dll</HintPath>

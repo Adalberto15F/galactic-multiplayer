@@ -25,6 +25,7 @@ Library: /home/neto/Documents/project/gameMultiplayer/Temp/BurstOutput/Data/Plug
 --assembly-defines=Unity.Mathematics;
 --assembly-defines=Unity.TextMeshPro;
 --assembly-defines=Unity.VisualScripting.State;
+--assembly-defines=Cinemachine;
 --assembly-defines=Unity.Collections.LowLevel.ILSupport;
 --assembly-defines=websocket-sharp;
 --assembly-defines=Fusion.Common;
@@ -121,6 +122,7 @@ Library: /home/neto/Documents/project/gameMultiplayer/Temp/BurstOutput/Data/Plug
 --assembly-defines=Unity.Mathematics;
 --assembly-defines=Unity.TextMeshPro;
 --assembly-defines=Unity.VisualScripting.State;
+--assembly-defines=Cinemachine;
 --assembly-defines=Unity.Collections.LowLevel.ILSupport;
 --assembly-defines=websocket-sharp;
 --assembly-defines=Fusion.Common;

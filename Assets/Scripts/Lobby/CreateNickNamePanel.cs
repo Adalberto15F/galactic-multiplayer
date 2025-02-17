@@ -1,17 +1,13 @@
- using System;
-using System.Collections;
-using System.Collections.Generic;
 using TMPro;
-using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
 public class CreateNickNamePanel : LobbyPanelBase
 {
-    [Header("CreateNickNamePanel Vars")]
-    [SerializeField] private TMP_InputField inputField;
+    [Header("CreateNickNamePanel Vars")] [SerializeField]
+    private TMP_InputField inputField;
+
     [SerializeField] private Button createNicknameBtn;
-    
     private const int MAX_CHAR_FOR_NICKNAME = 2;
 
     public override void InitPanel(LobbyUIManager lobbyUIManager)
@@ -30,13 +26,12 @@ public class CreateNickNamePanel : LobbyPanelBase
     private void OnClickCreateNickname()
     {
         var nickName = inputField.text;
-        if (nickName.Length > MAX_CHAR_FOR_NICKNAME)
+        if (nickName.Length >= MAX_CHAR_FOR_NICKNAME)
         {
+            GlobalManagers.Instance.NetworkRunnerController.SetPlayerNickname(nickName);
+
             base.ClosePanel();
             lobbyUIManager.ShowPanel(LobbyPanelType.MiddleSectionPanel);
-            //todo
         }
     }
 }
-
-
