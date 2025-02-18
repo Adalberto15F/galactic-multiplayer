@@ -237,7 +237,7 @@ MonoBehaviour:
   _interpolationDataSource: 0
   playerLayerMask:
     serializedVersion: 2
-    m_Bits: 0
+    m_Bits: 256
   groundLayerMask:
     serializedVersion: 2
     m_Bits: 128

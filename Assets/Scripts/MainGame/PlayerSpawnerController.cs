@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Fusion;
 using UnityEngine;
 
@@ -14,11 +12,12 @@ public class PlayerSpawnerController : NetworkBehaviour, IPlayerJoined, IPlayerL
         {
             foreach (var item in Runner.ActivePlayers)
             {
-                SpawnPlayers(item);
+                SpawnPlayer(item);
             }
         }
     }
-    private void SpawnPlayers(PlayerRef playerRef)
+
+    private void SpawnPlayer(PlayerRef playerRef)
     {
         if (Runner.IsServer)
         {
@@ -30,24 +29,23 @@ public class PlayerSpawnerController : NetworkBehaviour, IPlayerJoined, IPlayerL
         }
     }
 
-    private void DespawnPlayer(PlayerRef player)
+    private void DespawnPlayer(PlayerRef playerRef)
     {
         if (Runner.IsServer)
         {
-            if (Runner.TryGetPlayerObject(player, out var playerNetworkObject))
+            if (Runner.TryGetPlayerObject(playerRef, out var playerNetworkObject))
             {
                 Runner.Despawn(playerNetworkObject);
             }
             
             //Reset player object
-            Runner.SetPlayerObject(player, null);
-            
+            Runner.SetPlayerObject(playerRef, null);
         }
     }
-
+    
     public void PlayerJoined(PlayerRef player)
     {
-        SpawnPlayers(player);
+        SpawnPlayer(player);
     }
 
     public void PlayerLeft(PlayerRef player)

@@ -1,14 +1,13 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class LobbyPanelBase : MonoBehaviour
 {
     [field: SerializeField, Header("LobbyPanelBase Vars")]
-     public LobbyPanelType PanelType { get; private set; }
+    public LobbyPanelType PanelType { get; private set; }
     [SerializeField] private Animator panelAnimator;
-
+    
     protected LobbyUIManager lobbyUIManager;
+    
     public enum LobbyPanelType
     {
         None,
@@ -25,12 +24,17 @@ public class LobbyPanelBase : MonoBehaviour
     {
         this.gameObject.SetActive(true);
         const string POP_IN_CLIP_NAME = "In";
-        panelAnimator.Play(POP_IN_CLIP_NAME);
+        CallAnimationCoroutine(POP_IN_CLIP_NAME, true);
     }
 
     protected void ClosePanel()
     {
         const string POP_OUT_CLIP_NAME = "Out";
-        StartCoroutine(Utils.PlayAnimAndSetStateWhenFinished(gameObject, panelAnimator, POP_OUT_CLIP_NAME, false));
+        CallAnimationCoroutine(POP_OUT_CLIP_NAME, false);
+    }
+
+    private void CallAnimationCoroutine(string clipName, bool state)
+    {
+        StartCoroutine(Utils.PlayAnimAndSetStateWhenFinished(gameObject, panelAnimator, clipName, state));
     }
 }

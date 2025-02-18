@@ -1,5 +1,4 @@
 using System;
-using System.Collections;
 using System.Collections.Generic;
 using Fusion;
 using Fusion.Sockets;
@@ -9,12 +8,12 @@ using UnityEngine.SceneManagement;
 public class NetworkRunnerController : MonoBehaviour, INetworkRunnerCallbacks
 {
     public event Action OnStartedRunnerConnection;
-    public event Action OnPlayerJoinedSucessfully;
+    public event Action OnPlayerJoinedSuccessfully;
     
     public string LocalPlayerNickname { get; private set; }
     
     [SerializeField] private NetworkRunner networkRunnerPrefab;
-    
+
     private NetworkRunner networkRunnerInstance;
 
     public void ShutDownRunner()
@@ -36,35 +35,36 @@ public class NetworkRunnerController : MonoBehaviour, INetworkRunnerCallbacks
             networkRunnerInstance = Instantiate(networkRunnerPrefab);
         }
         
+        //Register so we will get the callbacks as well
         networkRunnerInstance.AddCallbacks(this);
 
+        //ProvideInput means that that player is recording and sending inputs to the server.
         networkRunnerInstance.ProvideInput = true;
 
-        var startGameArgs = new StartGameArgs()
-        {
-            GameMode = mode,
-            SessionName = roomName,
-            PlayerCount = 4,
-            SceneManager = networkRunnerInstance.GetComponent<INetworkSceneManager>()
-        };
-        
-        var result = await networkRunnerInstance.StartGame(startGameArgs);
+       var startGameArgs = new StartGameArgs()
+       {
+           GameMode = mode,
+           SessionName = roomName,
+           PlayerCount = 4,
+           SceneManager = networkRunnerInstance.GetComponent<INetworkSceneManager>(),
+       };
 
-        if (result.Ok)
-        {
-            const string SCENE_NAME = "MainGame";
-            networkRunnerInstance.SetActiveScene(SCENE_NAME);
-        }
-        else
-        {
-            Debug.LogError($"Failed to Start: {result.ShutdownReason}");
-        }
+      var result = await networkRunnerInstance.StartGame(startGameArgs);
+      if (result.Ok)
+      {
+          const string SCENE_NAME = "MainGame";
+          networkRunnerInstance.SetActiveScene(SCENE_NAME);
+      }
+      else
+      {
+          Debug.LogError($"Failed to start: {result.ShutdownReason}");
+      }
     }
 
     public void OnPlayerJoined(NetworkRunner runner, PlayerRef player)
     {
-        Debug.Log("OnPlayerJoined");
-        OnPlayerJoinedSucessfully?.Invoke();
+       Debug.Log("OnPlayerJoined");
+       OnPlayerJoinedSuccessfully?.Invoke();
     }
 
     public void OnPlayerLeft(NetworkRunner runner, PlayerRef player)
@@ -85,6 +85,7 @@ public class NetworkRunnerController : MonoBehaviour, INetworkRunnerCallbacks
     public void OnShutdown(NetworkRunner runner, ShutdownReason shutdownReason)
     {
         Debug.Log("OnShutdown");
+
         const string LOBBY_SCENE = "Lobby";
         SceneManager.LoadScene(LOBBY_SCENE);
     }

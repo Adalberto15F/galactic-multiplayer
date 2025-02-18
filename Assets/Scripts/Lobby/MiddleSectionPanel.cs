@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using Fusion;
 using TMPro;
 using UnityEngine;
@@ -7,21 +5,19 @@ using UnityEngine.UI;
 
 public class MiddleSectionPanel : LobbyPanelBase
 {
-    [Header("MiddleSectionPanel Vars")]
+    [Header("MiddleSectionPanel Vars")] 
     [SerializeField] private Button joinRandomRoomBtn;
     [SerializeField] private Button joinRoomByArgBtn;
     [SerializeField] private Button createRoomBtn;
-    
 
     [SerializeField] private TMP_InputField joinRoomByArgInputField;
     [SerializeField] private TMP_InputField createRoomInputField;
-    
     private NetworkRunnerController networkRunnerController;
-
+    
     public override void InitPanel(LobbyUIManager uiManager)
     {
         base.InitPanel(uiManager);
-        
+
         networkRunnerController = GlobalManagers.Instance.NetworkRunnerController;
         joinRandomRoomBtn.onClick.AddListener(JoinRandomRoom);
         joinRoomByArgBtn.onClick.AddListener(() => CreateRoom(GameMode.Client, joinRoomByArgInputField.text));
@@ -32,15 +28,14 @@ public class MiddleSectionPanel : LobbyPanelBase
     {
         if (field.Length >= 2)
         {
-            //Create a room
-            Debug.Log($"----{mode}----");
+            Debug.Log($"------------{mode}------------");
             networkRunnerController.StartGame(mode, field);
         }
     }
 
     private void JoinRandomRoom()
     {
-        Debug.Log($"----JoinRandomRoom----");
-        GlobalManagers.Instance.NetworkRunnerController.StartGame(GameMode.AutoHostOrClient, string.Empty);
+        Debug.Log($"------------JoinRandomRoom!------------");
+        networkRunnerController.StartGame(GameMode.AutoHostOrClient, string.Empty);
     }
 }

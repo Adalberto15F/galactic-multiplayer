@@ -7,6 +7,7 @@ public class Bullet : NetworkBehaviour
 {
     [SerializeField] private LayerMask playerLayerMask;
     [SerializeField] private LayerMask groundLayerMask;
+    [SerializeField] private int bulletDmg = 10;
     [SerializeField] private float moveSpeed = 20;
     [SerializeField] private float lifeTimeAmount = 0.8f;
     
@@ -68,8 +69,11 @@ public class Bullet : NetworkBehaviour
 
                     if (didNotHitOurOwnPlayer)
                     {
-                        //todo damage that player
-                        Debug.Log("Did hit a player");
+                        if (Runner.IsServer)
+                        {
+                            player.GetComponent<PlayerHealthController>().Rpc_ReducePlayerHealth(bulletDmg);
+                        }
+                        
                         didHitSomething = true;
                         break;
                     }
@@ -77,9 +81,4 @@ public class Bullet : NetworkBehaviour
             }
         }
     }
-    
-    
-    
-    
-    
 }

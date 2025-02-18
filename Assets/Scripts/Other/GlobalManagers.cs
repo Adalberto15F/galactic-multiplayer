@@ -7,9 +7,9 @@ public class GlobalManagers : MonoBehaviour
 {
     public static GlobalManagers Instance { get; private set; }
 
-    [SerializeField] private GameObject parentObjs;
+    [SerializeField] private GameObject parentObj;
     [field: SerializeField] public NetworkRunnerController NetworkRunnerController { get; private set; }
-
+    
     private void Awake()
     {
         if (Instance == null)
@@ -18,8 +18,8 @@ public class GlobalManagers : MonoBehaviour
         }
         else
         {
-            Destroy(parentObjs);
+            Destroy(parentObj);
         }
-        
     }
+    
 }

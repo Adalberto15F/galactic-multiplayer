@@ -43,6 +43,10 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
             var nickName = GlobalManagers.Instance.NetworkRunnerController.LocalPlayerNickname;
             RpcSetNickName(nickName);
         }
+        else
+        {
+            GetComponent<NetworkRigidbody2D>().InterpolationDataSource = InterpolationDataSources.Snapshots;
+        }
     }
 
     // Sends RPC to the HOST (from a client)
