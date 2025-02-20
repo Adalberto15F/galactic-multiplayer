@@ -1,4 +1,3 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using Fusion;
@@ -8,6 +7,8 @@ using UnityEngine.UI;
 
 public class PlayerHealthController : NetworkBehaviour
 {
+    [SerializeField] private Animator bloodScreenHitAnimator;
+    [SerializeField] private PlayerCameraController playerCameraController;
     [SerializeField] private Image fillAmountImg;
     [SerializeField] private TextMeshProUGUI healthAmountText;
 
@@ -54,7 +55,6 @@ public class PlayerHealthController : NetworkBehaviour
     }
 
 
-    [Obsolete("Obsolete")]
     private void PlayerGotHit(int healthAmount)
     {
         var isLocalPlayer = Runner.LocalPlayer == Object.HasInputAuthority;
@@ -62,6 +62,12 @@ public class PlayerHealthController : NetworkBehaviour
         {
             //todo do blood hit animation, shake camera etc
             Debug.Log("LOCAL PLAYER GOT HIT!");
+
+            const string BLOOD_HIT_CLIP_NAME = "BloodScreenHit";
+            bloodScreenHitAnimator.Play(BLOOD_HIT_CLIP_NAME);
+
+            var shakeAmount = new Vector3(0.2f, 0.1f);
+            playerCameraController.ShakeCamera(shakeAmount);
         }
 
         if (healthAmount <= 0)
@@ -70,4 +76,10 @@ public class PlayerHealthController : NetworkBehaviour
             Debug.Log("Player is DEAD!");
         }
     }
+    
+    
+    
+    
+    
+    
 }
