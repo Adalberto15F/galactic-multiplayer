@@ -94,6 +94,7 @@ GameObject:
   - component: {fileID: 1057969166086413438}
   - component: {fileID: 4015490690517020710}
   - component: {fileID: 8410530555673006207}
+  - component: {fileID: 4088903718220609364}
   m_Layer: 0
   m_Name: CanvasWorldSpace
   m_TagString: Untagged
@@ -184,6 +185,18 @@ MonoBehaviour:
   m_BlockingMask:
     serializedVersion: 2
     m_Bits: 4294967295
+--- !u!225 &4088903718220609364
+CanvasGroup:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 578776411369748068}
+  m_Enabled: 1
+  m_Alpha: 1
+  m_Interactable: 1
+  m_BlocksRaycasts: 1
+  m_IgnoreParentGroups: 0
 --- !u!1 &941282974924711940
 GameObject:
   m_ObjectHideFlags: 0

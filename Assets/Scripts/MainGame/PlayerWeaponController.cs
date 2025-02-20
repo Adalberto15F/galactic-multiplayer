@@ -17,10 +17,17 @@ public class PlayerWeaponController : NetworkBehaviour, IBeforeUpdate
     
     [Networked] private NetworkButtons buttonsPrev { get; set; }
     [Networked] private TickTimer shootCoolDown { get; set; }
+
+    private PlayerController playerController;
+
+    public override void Spawned()
+    {
+        playerController = GetComponent<PlayerController>();
+    }
     
     public void BeforeUpdate()
     {
-        if (Runner.LocalPlayer == Object.HasInputAuthority)
+        if (Runner.LocalPlayer == Object.HasInputAuthority && playerController.PlayerIsAlive)
         {
             var direction = localCam.ScreenToWorldPoint(Input.mousePosition) - transform.position;
 
@@ -32,7 +39,7 @@ public class PlayerWeaponController : NetworkBehaviour, IBeforeUpdate
 
     public override void FixedUpdateNetwork()
     {
-        if (Runner.TryGetInputForPlayer<PlayerData>(Object.InputAuthority, out var input))
+        if (Runner.TryGetInputForPlayer<PlayerData>(Object.InputAuthority, out var input) && playerController.PlayerIsAlive)
         {
             CheckShootInput(input);
             currentPlayerPivotRotation = input.GunPivotRotation;
@@ -87,17 +94,6 @@ public class PlayerWeaponController : NetworkBehaviour, IBeforeUpdate
             muzzleEffect.Stop();
         }
     }
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
 }
 
 

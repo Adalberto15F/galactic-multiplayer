@@ -10,13 +10,17 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
     [SerializeField] private float moveSpeed = 6;
     [SerializeField] private float jumpForce = 1000;
 
-    [Networked(OnChanged = nameof(OnNicknameChanged))] private NetworkString<_8> playerName { get; set; }
+    [Networked] public NetworkBool PlayerIsAlive { get; private set; }
+    [Networked(OnChanged = nameof(OnNicknameChanged))] 
+    private NetworkString<_8> playerName { get; set; }
     [Networked] private NetworkButtons buttonsPrev { get; set; }
+    [Networked] private TickTimer respawnTimer { get; set; }
     
     private float horizontal; 
     private Rigidbody2D rigid;
     private PlayerWeaponController playerWeaponController;
     private PlayerVisualController playerVisualController;
+    private PlayerHealthController playerHealthController;
     
     public enum PlayerInputButtons
     {
@@ -30,8 +34,10 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
         rigid = GetComponent<Rigidbody2D>();
         playerWeaponController = GetComponent<PlayerWeaponController>();
         playerVisualController = GetComponent<PlayerVisualController>();
+        playerHealthController = GetComponent<PlayerHealthController>();
 
         SetLocalObjects();
+        PlayerIsAlive = true;
     }
     
     private void SetLocalObjects()
@@ -70,6 +76,15 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
     {
         playerNameText.text = nickName + " " + Object.InputAuthority.PlayerId;
     }
+
+    public void KillPlayer()
+    {
+        PlayerIsAlive = false;
+        rigid.simulated = false;
+        playerVisualController.TriggerDieAnimation();
+
+        respawnTimer = TickTimer.CreateFromSeconds(Runner, 5f);
+    }
     
     //Happens before anything else Fusion does, network application, reconlation etc 
     //Called at the start of the Fusion Update loop, before the Fusion simulation loop.
@@ -77,7 +92,7 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
     public void BeforeUpdate()
     {
         //We are the local machine
-        if (Runner.LocalPlayer == Object.HasInputAuthority)
+        if (Runner.LocalPlayer == Object.HasInputAuthority && PlayerIsAlive)
         {
             const string HORIZONTAL = "Horizontal";
             horizontal = Input.GetAxisRaw(HORIZONTAL);
@@ -87,10 +102,11 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
     //FUN
     public override void FixedUpdateNetwork()
     {
+        CheckRespawnTimer();
         // will return false if:
         //the client does not have State Authority or Input Authority
         // the requested type of input does not exist in the simulation
-        if (Runner.TryGetInputForPlayer<PlayerData>(Object.InputAuthority, out var input))
+        if (Runner.TryGetInputForPlayer<PlayerData>(Object.InputAuthority, out var input) && PlayerIsAlive)
         {
             rigid.velocity = new Vector2(input.HorizontalInput * moveSpeed, rigid.velocity.y);
             
@@ -100,6 +116,23 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
         playerVisualController.UpdateScaleTransforms(rigid.velocity);
     }
 
+    private void CheckRespawnTimer()
+    {
+        if (PlayerIsAlive) return;
+
+        if (respawnTimer.Expired(Runner))
+        {
+            respawnTimer = TickTimer.None;
+            RespawnPlayer();
+        }
+    }
+
+    private void RespawnPlayer()
+    {
+        PlayerIsAlive = true;
+        rigid.simulated = true;
+        playerVisualController.TriggerRespawnAnimation();
+    }
     public override void Render()
     {
         playerVisualController.RendererVisuals(rigid.velocity, playerWeaponController.IsHoldingShootingKey);

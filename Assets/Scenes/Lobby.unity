@@ -351,6 +351,46 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1223984957903796682, guid: 1712a0b6f441d424eb86b6e332a88f4d, type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 35
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223984957903796682, guid: 1712a0b6f441d424eb86b6e332a88f4d, type: 3}
+      propertyPath: m_LocalRotation.w
+      value: 0.94110155
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223984957903796682, guid: 1712a0b6f441d424eb86b6e332a88f4d, type: 3}
+      propertyPath: m_LocalRotation.x
+      value: -0.018188477
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223984957903796682, guid: 1712a0b6f441d424eb86b6e332a88f4d, type: 3}
+      propertyPath: m_LocalRotation.y
+      value: -0.0070691765
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223984957903796682, guid: 1712a0b6f441d424eb86b6e332a88f4d, type: 3}
+      propertyPath: m_LocalRotation.z
+      value: -0.33756053
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223984957903796682, guid: 1712a0b6f441d424eb86b6e332a88f4d, type: 3}
+      propertyPath: m_AnchoredPosition.x
+      value: -734
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223984957903796682, guid: 1712a0b6f441d424eb86b6e332a88f4d, type: 3}
+      propertyPath: m_AnchoredPosition.y
+      value: -167
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223984957903796682, guid: 1712a0b6f441d424eb86b6e332a88f4d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.x
+      value: -2.236
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223984957903796682, guid: 1712a0b6f441d424eb86b6e332a88f4d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.y
+      value: -0.059
+      objectReference: {fileID: 0}
+    - target: {fileID: 1223984957903796682, guid: 1712a0b6f441d424eb86b6e332a88f4d, type: 3}
+      propertyPath: m_LocalEulerAnglesHint.z
+      value: -39.463
+      objectReference: {fileID: 0}
     - target: {fileID: 1223984957934566171, guid: 1712a0b6f441d424eb86b6e332a88f4d, type: 3}
       propertyPath: m_text
       value: 'CRIAR '
