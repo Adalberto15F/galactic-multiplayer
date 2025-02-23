@@ -14,7 +14,8 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
     [Networked(OnChanged = nameof(OnNicknameChanged))] 
     private NetworkString<_8> playerName { get; set; }
     [Networked] private NetworkButtons buttonsPrev { get; set; }
-    [Networked] private TickTimer respawnTimer { get; set; }
+    [Networked] public TickTimer RespawnTimer { get; private set; }
+    [Networked] private Vector2 serverNextSpawnPoint { get; set; }
     
     private float horizontal; 
     private Rigidbody2D rigid;
@@ -54,19 +55,13 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
             GetComponent<NetworkRigidbody2D>().InterpolationDataSource = InterpolationDataSources.Snapshots;
         }
     }
-
-    // Sends RPC to the HOST (from a client)
-    //"sources" define which PEER can send the rpc
-    //The RpcTargets defines on which it is executed!
+    
     [Rpc(sources: RpcSources.InputAuthority, RpcTargets.StateAuthority)]
     private void RpcSetNickName(NetworkString<_8> nickName)
     {
         playerName = nickName;
     }
-
-    //For example -
-    //if i set on spawned method a name called "banana"
-    // and then on fun i change another name which is again "banana"
+    
     private static void OnNicknameChanged(Changed<PlayerController> changed)
     {
         changed.Behaviour.SetPlayerNickname(changed.Behaviour.playerName);
@@ -79,16 +74,18 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
 
     public void KillPlayer()
     {
+        if (Runner.IsServer)
+        {
+            serverNextSpawnPoint = GlobalManagers.Instance.PlayerSpawnerController.GetRandomSpawnPoint();
+        }
+        
         PlayerIsAlive = false;
         rigid.simulated = false;
         playerVisualController.TriggerDieAnimation();
 
-        respawnTimer = TickTimer.CreateFromSeconds(Runner, 5f);
+        RespawnTimer = TickTimer.CreateFromSeconds(Runner, 5f);
     }
     
-    //Happens before anything else Fusion does, network application, reconlation etc 
-    //Called at the start of the Fusion Update loop, before the Fusion simulation loop.
-    //It fires before Fusion does ANY work, every screen refresh.
     public void BeforeUpdate()
     {
         //We are the local machine
@@ -103,9 +100,10 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
     public override void FixedUpdateNetwork()
     {
         CheckRespawnTimer();
-        // will return false if:
-        //the client does not have State Authority or Input Authority
-        // the requested type of input does not exist in the simulation
+        
+        // retornará false se:
+        //o cliente não possui autoridade estatal ou autoridade de entrada
+        // o tipo de entrada solicitado não existe na simulação
         if (Runner.TryGetInputForPlayer<PlayerData>(Object.InputAuthority, out var input) && PlayerIsAlive)
         {
             rigid.velocity = new Vector2(input.HorizontalInput * moveSpeed, rigid.velocity.y);
@@ -120,9 +118,9 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
     {
         if (PlayerIsAlive) return;
 
-        if (respawnTimer.Expired(Runner))
+        if (RespawnTimer.Expired(Runner))
         {
-            respawnTimer = TickTimer.None;
+            RespawnTimer = TickTimer.None;
             RespawnPlayer();
         }
     }
@@ -131,7 +129,9 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
     {
         PlayerIsAlive = true;
         rigid.simulated = true;
+        rigid.position = serverNextSpawnPoint;
         playerVisualController.TriggerRespawnAnimation();
+        playerHealthController.ResetHealthAmountToMax();
     }
     public override void Render()
     {
