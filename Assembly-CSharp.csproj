@@ -92,6 +92,7 @@
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_TextEventCheck.cs" />
     <Compile Include="Assets/Scripts/MainGame/PlayerHealthController.cs" />
     <Compile Include="Assets/TextMesh Pro/Examples &amp; Extras/Scripts/TMP_UiFrameRateCounter.cs" />
+    <Compile Include="Assets/Scripts/MainGame/GameOverPanel.cs" />
     <Compile Include="Assets/Photon/Fusion/Scripts/Prototyping/ToggleRunnerVisibility.cs" />
     <Compile Include="Assets/Photon/Fusion/Scripts/FusionGraph.cs" />
     <Compile Include="Assets/Photon/Fusion/Scripts/Utilities/FusionEditorUtilitiesExternal.cs" />

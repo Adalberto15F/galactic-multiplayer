@@ -5,17 +5,24 @@ using UnityEngine;
 
 public class PlayerController : NetworkBehaviour, IBeforeUpdate
 {
+    public bool AcceptAnyInput => PlayerIsAlive && !GameManager.MatchIsOver;
+    
     [SerializeField] private TextMeshProUGUI playerNameText;
     [SerializeField] private GameObject cam;
     [SerializeField] private float moveSpeed = 6;
     [SerializeField] private float jumpForce = 1000;
 
+    [Header("Grounded Vars")] 
+    [SerializeField] private LayerMask groundLayer;
+    [SerializeField] private Transform groundDetectionObj;
+    
     [Networked] public NetworkBool PlayerIsAlive { get; private set; }
     [Networked(OnChanged = nameof(OnNicknameChanged))] 
     private NetworkString<_8> playerName { get; set; }
     [Networked] private NetworkButtons buttonsPrev { get; set; }
     [Networked] public TickTimer RespawnTimer { get; private set; }
     [Networked] private Vector2 serverNextSpawnPoint { get; set; }
+    [Networked] private NetworkBool isGrounded { get; set; }
     
     private float horizontal; 
     private Rigidbody2D rigid;
@@ -89,7 +96,7 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
     public void BeforeUpdate()
     {
         //We are the local machine
-        if (Runner.LocalPlayer == Object.HasInputAuthority && PlayerIsAlive)
+        if (Runner.LocalPlayer == Object.HasInputAuthority && AcceptAnyInput)
         {
             const string HORIZONTAL = "Horizontal";
             horizontal = Input.GetAxisRaw(HORIZONTAL);
@@ -104,7 +111,7 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
         // retornará false se:
         //o cliente não possui autoridade estatal ou autoridade de entrada
         // o tipo de entrada solicitado não existe na simulação
-        if (Runner.TryGetInputForPlayer<PlayerData>(Object.InputAuthority, out var input) && PlayerIsAlive)
+        if (Runner.TryGetInputForPlayer<PlayerData>(Object.InputAuthority, out var input) && AcceptAnyInput)
         {
             rigid.velocity = new Vector2(input.HorizontalInput * moveSpeed, rigid.velocity.y);
             
@@ -140,13 +147,24 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
 
     private void CheckJumpInput(PlayerData input)
     {
-        var pressed = input.NetworkButtons.GetPressed(buttonsPrev);
-        if (pressed.WasPressed(buttonsPrev, PlayerInputButtons.Jump))
-        {
-            rigid.AddForce(Vector2.up *  jumpForce, ForceMode2D.Force);
-        }
+        var transform1 = groundDetectionObj.transform;
+        isGrounded = (bool)Runner.GetPhysicsScene2D().OverlapBox(transform1.position,
+            transform1.localScale, 0, groundLayer);
 
-        buttonsPrev = input.NetworkButtons;
+        if (isGrounded)
+        {
+            var pressed = input.NetworkButtons.GetPressed(buttonsPrev);
+            if (pressed.WasPressed(buttonsPrev, PlayerInputButtons.Jump))
+            {
+                rigid.AddForce(Vector2.up * jumpForce, ForceMode2D.Force);
+            }
+        }
+    }
+
+    public override void Despawned(NetworkRunner runner, bool hasState)
+    {
+        GlobalManagers.Instance.ObjectPoolingManager.RemoveNetworkObjectFromDic(Object);
+        Destroy(gameObject);
     }
 
     public PlayerData GetPlayerNetworkInput()
