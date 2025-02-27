@@ -22,10 +22,6 @@ Cada jogador tem sua posição e ações sincronizadas usando **Network Objects*
 #### 🔹 Interação Multiplayer  
 O jogo utiliza **RPCs (Remote Procedure Calls)** e sincronização de estado para garantir que todas as ações dos jogadores sejam refletidas corretamente em todas as instâncias conectadas.  
 
-## 📨 Implementação do Chat e Simulação de Latência  
-
-No **Galactic Multiplayer**, a comunicação entre os jogadores é essencial para a experiência multiplayer. O chat foi implementado utilizando **Photon Fusion**, garantindo que as mensagens sejam enviadas e recebidas em tempo real, mesmo em condições de latência variável.  
-
 #### 1️⃣ Envio de Mensagens  
 - Cada jogador pode digitar uma mensagem e enviá-la para todos na sala.  
 - As mensagens são transmitidas via **RPCs (Remote Procedure Calls)**, garantindo que todos os jogadores conectados recebam a informação simultaneamente.  
