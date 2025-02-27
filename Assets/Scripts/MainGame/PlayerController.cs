@@ -1,11 +1,12 @@
 using System;
+using System.Globalization;
 using Fusion;
 using TMPro;
 using UnityEngine;
 
 public class PlayerController : NetworkBehaviour, IBeforeUpdate
 {
-    public bool AcceptAnyInput => PlayerIsAlive && !GameManager.MatchIsOver;
+    public bool AcceptAnyInput => PlayerIsAlive && !GameManager.MatchIsOver && !PlayerChatController.IsTyping;
     
     [SerializeField] private TextMeshProUGUI playerNameText;
     [SerializeField] private GameObject cam;
@@ -15,21 +16,24 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
     [Header("Grounded Vars")] 
     [SerializeField] private LayerMask groundLayer;
     [SerializeField] private Transform groundDetectionObj;
-    
-    [Networked] public NetworkBool PlayerIsAlive { get; private set; }
-    [Networked(OnChanged = nameof(OnNicknameChanged))] 
-    private NetworkString<_8> playerName { get; set; }
-    [Networked] private NetworkButtons buttonsPrev { get; set; }
+
     [Networked] public TickTimer RespawnTimer { get; private set; }
+    [Networked] public NetworkBool PlayerIsAlive { get; private set; }
+
+    [Networked(OnChanged = nameof(OnNicknameChanged))]
+    private NetworkString<_8> playerName { get; set; }
+
+    [Networked] private NetworkButtons buttonsPrev { get; set; }
     [Networked] private Vector2 serverNextSpawnPoint { get; set; }
     [Networked] private NetworkBool isGrounded { get; set; }
-    
-    private float horizontal; 
+    [Networked] private TickTimer respawnToNewPointTimer { get; set; }
+
+    private float horizontal;
     private Rigidbody2D rigid;
     private PlayerWeaponController playerWeaponController;
     private PlayerVisualController playerVisualController;
     private PlayerHealthController playerHealthController;
-    
+
     public enum PlayerInputButtons
     {
         None,
@@ -47,11 +51,12 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
         SetLocalObjects();
         PlayerIsAlive = true;
     }
-    
+
     private void SetLocalObjects()
     {
         if (Runner.LocalPlayer == Object.HasInputAuthority)
         {
+            cam.transform.SetParent(null);
             cam.SetActive(true);
 
             var nickName = GlobalManagers.Instance.NetworkRunnerController.LocalPlayerNickname;
@@ -59,6 +64,7 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
         }
         else
         {
+
             GetComponent<NetworkRigidbody2D>().InterpolationDataSource = InterpolationDataSources.Snapshots;
         }
     }
@@ -81,16 +87,17 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
 
     public void KillPlayer()
     {
+        const int RESPAWN_AMOUNT = 5;
         if (Runner.IsServer)
         {
             serverNextSpawnPoint = GlobalManagers.Instance.PlayerSpawnerController.GetRandomSpawnPoint();
+            respawnToNewPointTimer = TickTimer.CreateFromSeconds(Runner, RESPAWN_AMOUNT - 1);
         }
         
         PlayerIsAlive = false;
         rigid.simulated = false;
         playerVisualController.TriggerDieAnimation();
-
-        RespawnTimer = TickTimer.CreateFromSeconds(Runner, 5f);
+        RespawnTimer = TickTimer.CreateFromSeconds(Runner, RESPAWN_AMOUNT);
     }
     
     public void BeforeUpdate()
@@ -102,22 +109,21 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
             horizontal = Input.GetAxisRaw(HORIZONTAL);
         }
     }
-    
+
     //FUN
     public override void FixedUpdateNetwork()
     {
         CheckRespawnTimer();
         
-        // retornará false se:
-        //o cliente não possui autoridade estatal ou autoridade de entrada
-        // o tipo de entrada solicitado não existe na simulação
         if (Runner.TryGetInputForPlayer<PlayerData>(Object.InputAuthority, out var input) && AcceptAnyInput)
         {
             rigid.velocity = new Vector2(input.HorizontalInput * moveSpeed, rigid.velocity.y);
-            
+
             CheckJumpInput(input);
+            
+            buttonsPrev = input.NetworkButtons;
         }
-        
+
         playerVisualController.UpdateScaleTransforms(rigid.velocity);
     }
 
@@ -125,6 +131,13 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
     {
         if (PlayerIsAlive) return;
 
+        //Will only run on the server
+        if (respawnToNewPointTimer.Expired(Runner))
+        {
+            GetComponent<NetworkRigidbody2D>().TeleportToPosition(serverNextSpawnPoint);
+            respawnToNewPointTimer = TickTimer.None;
+        }
+        
         if (RespawnTimer.Expired(Runner))
         {
             RespawnTimer = TickTimer.None;
@@ -136,10 +149,10 @@ public class PlayerController : NetworkBehaviour, IBeforeUpdate
     {
         PlayerIsAlive = true;
         rigid.simulated = true;
-        rigid.position = serverNextSpawnPoint;
         playerVisualController.TriggerRespawnAnimation();
         playerHealthController.ResetHealthAmountToMax();
     }
+
     public override void Render()
     {
         playerVisualController.RendererVisuals(rigid.velocity, playerWeaponController.IsHoldingShootingKey);

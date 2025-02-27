@@ -1,16 +1,18 @@
-using System.Collections;
-using System.Collections.Generic;
 using Cinemachine;
 using UnityEngine;
 
 public class PlayerCameraController : MonoBehaviour
 {
-    [SerializeField] private CinemachineImpulseSource impulseSourse;
+    [SerializeField] private CinemachineImpulseSource impulseSource;
+    [SerializeField] private CinemachineConfiner2D cinemachineConfiner2D;
+
+    private void Start()
+    {
+        cinemachineConfiner2D.m_BoundingShape2D = GlobalManagers.Instance.GameManager.CameraBounds;
+    }
 
     public void ShakeCamera(Vector3 shakeAmount)
     {
-        impulseSourse.GenerateImpulse(shakeAmount);
+        impulseSource.GenerateImpulse(shakeAmount);
     }
 }
-
-
