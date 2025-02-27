@@ -1,12 +1,27 @@
 # 🌌 Galactic Multiplayer  
 
-## 🎮 Sobre o Jogo  
-Galactic Multiplayer é um jogo **multiplayer online** desenvolvido com **Unity** e **Photon Fusion**, onde os jogadores se enfrentam em tempo real.  
+## 📖 Sobre o Projeto
 
-## 🚀 Tecnologias Utilizadas  
-- **Unity** 🟦 (Engine do jogo)  
-- **Photon Fusion** ⚡ (Multiplayer e sincronização de rede)  
-- **C#** 🔷 (Linguagem de programação)  
+### 🎯 Objetivo  
+O **Galactic Multiplayer** é um jogo multiplayer online onde os jogadores exploram o espaço e enfrentam desafios em tempo real. Ele foi desenvolvido para estudar e aplicar conceitos de redes e jogos distribuídos usando **Unity** e **Photon Fusion**.
+
+### 🛠️ Tecnologias Utilizadas  
+- **Unity** 🟦 – Motor gráfico e de desenvolvimento do jogo  
+- **Photon Fusion** ⚡ – Framework de multiplayer para sincronização em tempo real  
+- **C#** 🔷 – Linguagem de programação utilizada no desenvolvimento  
+
+### 🏗️ Estrutura do Projeto  
+O projeto é composto por várias partes essenciais, incluindo:
+
+#### 🔹 Gerenciamento de Salas  
+As salas são criadas e gerenciadas pelo **Photon Fusion**, permitindo que múltiplos jogadores (até 4 jogadores) entrem e interajam no mesmo ambiente.  
+
+#### 🔹 Sincronização dos Jogadores  
+Cada jogador tem sua posição e ações sincronizadas usando **Network Objects**, garantindo uma experiência fluida e sem atrasos perceptíveis(dependeo da internet vai ter um poucode atraso).  
+
+#### 🔹 Interação Multiplayer  
+O jogo utiliza **RPCs (Remote Procedure Calls)** e sincronização de estado para garantir que todas as ações dos jogadores sejam refletidas corretamente em todas as instâncias conectadas.  
+
 
 ## 🛠️ Como Rodar o Projeto  
 
@@ -16,7 +31,7 @@ Galactic Multiplayer é um jogo **multiplayer online** desenvolvido com **Unity*
 
 ### Configure o Photon Fusion  
 1. Vá para `Assets > Photon > Fusion > FusionAppSettings.asset`  
-2. Insira a **App ID** do Photon (registre-se no [Photon Engine](https://www.photonengine.com/))  
+2. Insira a **App ID** do Photon (registre-se no [Photon Engine](photonengine.com))  
 
 ### Compile e Rode 🚀  
 - Clique em **Play** no Unity  
