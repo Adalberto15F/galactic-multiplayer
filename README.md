@@ -26,14 +26,11 @@ O jogo utiliza **RPCs (Remote Procedure Calls)** e sincronização de estado par
 
 No **Galactic Multiplayer**, a comunicação entre os jogadores é essencial para a experiência multiplayer. O chat foi implementado utilizando **Photon Fusion**, garantindo que as mensagens sejam enviadas e recebidas em tempo real, mesmo em condições de latência variável.  
 
-
-# 🏗️ Como o Chat Funciona  
-
-### 1️⃣ Envio de Mensagens  
+#### 1️⃣ Envio de Mensagens  
 - Cada jogador pode digitar uma mensagem e enviá-la para todos na sala.  
 - As mensagens são transmitidas via **RPCs (Remote Procedure Calls)**, garantindo que todos os jogadores conectados recebam a informação simultaneamente.  
 
-### 2️⃣ Sincronização entre os Jogadores  
+#### 2️⃣ Sincronização entre os Jogadores  
 - O sistema de **Network Objects** do Photon Fusion mantém o estado do chat atualizado para todos os jogadores.  
 - Mesmo que um jogador entre na sala após o início da conversa, ele recebe as mensagens anteriores armazenadas no buffer.  
 
@@ -45,7 +42,6 @@ No **Galactic Multiplayer**, a comunicação entre os jogadores é essencial par
 - **Sem lag**, as mensagens do chat aparecem instantaneamente.  
 - Com latência artificial de **70ms**, ainda conseguimos uma experiência fluida graças ao **client prediction** do Photon Fusion, que antecipa eventos como movimentação e disparos no jogo.  
 - Quando a latência é removida, a comunicação volta ao normal imediatamente.  
-
 
 ## 🛠️ Como Rodar o Projeto  
 
